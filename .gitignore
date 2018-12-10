@@ -13,6 +13,7 @@
 
 # hide configs
 .env
+auth-variables.js
 
 # misc
 .DS_Store

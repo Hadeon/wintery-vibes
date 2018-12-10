@@ -4,15 +4,17 @@ const bodyParser = require('body-parser');
 const app = express();
 const Pusher = require('pusher');
 
+require('dotenv').config();
+
 // -------------------------
 // Need to create new Pusher app for credentials before server start
 // -------------------------
 
 const pusher = new Pusher({
-  appId: '',
-  key: '',
-  secret: '',
-  cluster: '',
+  appId: process.env.APP_ID,
+  key: process.env.APP_KEY,
+  secret: process.env.APP_SECRET,
+  cluster: process.env.APP_CLUSTER,
   encrypted: true
 });
 
