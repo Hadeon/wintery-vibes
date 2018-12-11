@@ -1,10 +1,6 @@
-import {
-  EventEmitter
-} from 'events';
+import { EventEmitter } from 'events';
 import auth0 from 'auth0-js';
-import {
-  AUTH_CONFIG
-} from './auth-variables';
+import { AUTH_CONFIG } from './auth-variables';
 import history from '../history';
 
 export default class Auth extends EventEmitter {
@@ -61,7 +57,7 @@ export default class Auth extends EventEmitter {
   getAccessToken() {
     const accessToken = localStorage.getItem('access_token');
     if (!accessToken) {
-      throw new Error('No access token found.')
+      throw new Error('No access token found');
     }
     return accessToken;
   }

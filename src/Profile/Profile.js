@@ -7,7 +7,8 @@ class Profile extends Component {
     this.setState({ profile: {} });
     const { userProfile, getProfile } = this.props.auth;
 
-    if(!userProfile) {
+
+    if (!userProfile) {
       getProfile((err, profile) => {
         this.setState({ profile });
       });
@@ -24,7 +25,7 @@ class Profile extends Component {
           <Panel header="Profile">
             <img src={profile.picture} alt="profile" />
             <div>
-              <ControlLabel><Glyphicon glyph="user" /> Nickname </ControlLabel>
+              <ControlLabel><Glyphicon glyph="user" /> Nickname</ControlLabel>
               <h3>{profile.nickname}</h3>
             </div>
             <pre>{JSON.stringify(profile, null, 2)}</pre>
