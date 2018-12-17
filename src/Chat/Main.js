@@ -2,19 +2,69 @@ import React, { Component } from 'react';
 import './Chat.css';
 import { FormControl, Grid, Row, Col } from 'react-bootstrap';
 import axios from 'axios';
+import shortid from 'shortid';
 import Pusher from 'pusher-js';
 
-class Chat extends Component {
+class Main extends Component {
   constructor() {
     super();
     this.state = {
       value: '',
       username: '',
-      messages: []
+      messages: [],
+      show_prompt: false
     };
     this.sendMessage = this.sendMessage.bind(this);
     this.handleChange = this.handleChange.bind(this);
+    
+    this.channel = null;
+    this.is_channel_bound = null;
+    this.onPressCreateRoom = this.onPressCreateRoom.bind(this);
+    this.onPressJoinRoom = this.onPressJoinRoom.bind(this);
+    this.joinRoom = this.joinRoom.bind(this);
+    this.onCancelJoinRoom = this.onCancelJoinRoom.bind(this);
   }
+
+  // Methods for channels
+
+  onPressCreateRoom() {
+    let room_id = shortid.generate();
+    this.channel = this.pusher.subscribe('private-' + room_id);
+
+    // Push an alert with the room-id for others to join
+
+    // alert.alert(
+    //   'Share this room ID with those you want to join'
+    // )
+  }
+
+  onPressJoinRoom() {
+    this.state({
+      show_prompt: true
+    })
+  }
+
+  joinRoom(room_id) {
+    this.channel = this.pusher.subscribe('private-' + room_id);
+    this.channel.trigger('client-joined', {
+      username: this.state.username
+    });
+
+    /* Save the room_id to the DB => user => channels
+    for future access */
+
+    this.setState({
+      show_prompt: false
+    })
+  }
+
+  onCancelJoinRoom() {
+    this.setState({
+      show_prompt: false
+    });
+  }
+
+  // End of channel methods 
 
   componentWillMount() {
     this.setState({ username: localStorage.username });
@@ -23,11 +73,6 @@ class Chat extends Component {
       cluster: 'us2',
       encrypted: true
     });
-
-    // The shortid/room_id supplied from Main.js is passed in
-    // On subscribe-success check DB for previous messages
-    // If messages exist, populate this.state.messages with them
-
     this.chatRoom = this.pusher.subscribe('private-reactchat');
   }
 
@@ -82,7 +127,9 @@ class Chat extends Component {
     })
     return (
       <Grid>
+        { /* Join and Create room buttons */ }
         <Row className="show-grid">
+        { /* Render a list of channels from db => user => channels */ }
           <Col xs={12}>
             {message}
             <div className="chat-container">
@@ -100,7 +147,7 @@ class Chat extends Component {
                 </Col>
               </form>
               <h4 className="text-center">Welcome, {this.state.username}</h4>
-              <h5 className="text-center">This is a channel</h5>
+              <h5 className="text-center">Start a conversation.</h5>
             </div>
           </Col>
         </Row>
@@ -109,4 +156,4 @@ class Chat extends Component {
   }
 }
 
-export default Chat;
+export default Main;
