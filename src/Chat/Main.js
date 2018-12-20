@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
+import Chat from './Chat.js';
 import './Chat.css';
-import { FormControl, Grid, Row, Col } from 'react-bootstrap';
+import { Grid, Row, Col } from 'react-bootstrap';
 import axios from 'axios';
 import shortid from 'shortid';
 import Pusher from 'pusher-js';
@@ -12,7 +13,8 @@ class Main extends Component {
       value: '',
       username: '',
       messages: [],
-      show_prompt: false
+      show_prompt: false,
+      room_id: null
     };
     this.sendMessage = this.sendMessage.bind(this);
     this.handleChange = this.handleChange.bind(this);
@@ -23,13 +25,23 @@ class Main extends Component {
     this.onPressJoinRoom = this.onPressJoinRoom.bind(this);
     this.joinRoom = this.joinRoom.bind(this);
     this.onCancelJoinRoom = this.onCancelJoinRoom.bind(this);
+    this.simulateJoin = this.simulateJoin.bind(this);
   }
 
   // Methods for channels
 
+  simulateJoin() {
+    this.setState({
+      room_id: 1234
+    })
+  }
+
   onPressCreateRoom() {
     let room_id = shortid.generate();
     this.channel = this.pusher.subscribe('private-' + room_id);
+    this.setState({
+      room_id: room_id
+    })
 
     // Push an alert with the room-id for others to join
 
@@ -127,30 +139,16 @@ class Main extends Component {
     })
     return (
       <Grid>
-        { /* Join and Create room buttons */ }
-        <Row className="show-grid">
-        { /* Render a list of channels from db => user => channels */ }
-          <Col xs={12}>
-            {message}
-            <div className="chat-container">
-              <form onSubmit={this.sendMessage}>
-                <Col xs={5} xsOffset={3}>
-                  <FormControl
-                    type="text"
-                    value={this.state.value}
-                    placeholder="Enter message here"
-                    onChange={this.handleChange}
-                  />
-                </Col>
-                <Col xs={4}>
-                  <input className="btn btn-primary" value="Send" type="submit" />
-                </Col>
-              </form>
-              <h4 className="text-center">Welcome, {this.state.username}</h4>
-              <h5 className="text-center">Start a conversation.</h5>
-            </div>
-          </Col>
-        </Row>
+        {
+          this.state.room_id === null ? 
+            <Row className="show-grid">
+            <input className="btn btn-primary" value="Join Channel" onClick={() => { this.simulateJoin() }}/>
+            <h4 className="text-center">Welcome, {this.state.username}</h4>
+            <h5 className="text-center">Start a conversation.</h5>
+            </Row>
+            :
+            <Chat />
+        } 
       </Grid>
     )
   }

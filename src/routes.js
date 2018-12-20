@@ -7,7 +7,6 @@ import history from './history';
 import Home from './Home/Home'; 
 import Profile from './Profile/Profile'; 
 import Main from './Chat/Main'; 
-import Chat from './Chat/Chat';
 import Callback from './Callback/Callback';
 
 const auth = new Auth();
@@ -29,13 +28,6 @@ export const makeMainRoutes = () => {
               <Redirect to="/home"/>
             ) : (
               <Main auth={auth} {...props} />
-            )
-          )} />
-          <Route exact path="/chat/channel" render={(props) => (
-            !auth.isAuthenticated() ? (
-              <Redirect to="/home"/>
-            ) : (
-              <Chat auth={auth} {...props} />
             )
           )} />
           <Route path="/profile" render={(props) => (

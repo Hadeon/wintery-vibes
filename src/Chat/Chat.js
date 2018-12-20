@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Redirect } from 'react-router-dom';
 import './Chat.css';
 import { FormControl, Grid, Row, Col } from 'react-bootstrap';
 import axios from 'axios';
@@ -10,7 +11,8 @@ class Chat extends Component {
     this.state = {
       value: '',
       username: '',
-      messages: []
+      messages: [],
+      redirect: false
     };
     this.sendMessage = this.sendMessage.bind(this);
     this.handleChange = this.handleChange.bind(this);
@@ -82,7 +84,11 @@ class Chat extends Component {
     })
     return (
       <Grid>
-        <Row className="show-grid">
+        { 
+          this.state.redirect ? 
+          <Redirect to="/chat"/> 
+          : 
+          <Row className="show-grid">
           <Col xs={12}>
             {message}
             <div className="chat-container">
@@ -103,7 +109,8 @@ class Chat extends Component {
               <h5 className="text-center">This is a channel</h5>
             </div>
           </Col>
-        </Row>
+        </Row>    
+        }
       </Grid>
     )
   }
