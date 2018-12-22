@@ -1,5 +1,5 @@
 
-
+.env file will need to be created with Pusher and Firebase settings.
 
 Base app complete, time to create additional branches.
 
